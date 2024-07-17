@@ -37,10 +37,24 @@ https://d.com/d.txt
 [a](https://b.com/c.txt)
 
 | a | b |
-|---|---|
+|---|---|`)},
+		"test13.md": &fstest.MapFile{Data: []byte(`| Header 1 | Header 2 | Header 3 | Header 4 |
+|----------|----------|----------|----------|
+| Row 1, Column 1 | Row 1, Column 2 | Row 1, Column 3 | Row 1, Column 4 |
+| Row 2, Column 1 | Row 2, Column 2 | Row 2, Column 3 | Row 2, Column 4 |
+| Row 3, Column 1 | Row 3, Column 2 | Row 3, Column 3 | Row 3, Column 4 |`)},
+		"test14.md": &fstest.MapFile{Data: []byte(`## Data Engineering
 
+- [Building and scaling Notion's data lake](https://www.notion.so/blog/building-and-scaling-notions-data-lake)
 
-      `)},
+## eidos - Personal Knowledge Management
+
+https://discord.com/invite/bsGMPDR23b
+
+https://eidos.space/?home=1
+
+[GitHub - mayneyao/eidos: Offline alternative to Notion. Eidos is an extensible framework for managing your personal data throughout your lifetime in one place.](https://github.com/mayneyao/eidos)
+`)},
 	}
 
 	tests := []struct {
@@ -115,9 +129,8 @@ This is a paragraph with a [link](https://example.com).
 			filename: "test11.md",
 			expected: "Text before [Link 1](https://example1.com) text between [Link 2](https://example2.com) text after",
 		},
-
 		{
-			name:     "xxx",
+			name:     "Includes markdown table",
 			filename: "test12.md",
 			expected: `hello
 
@@ -126,8 +139,31 @@ https://d.com/d.txt
 [a](https://b.com/c.txt)
 
 | a | b |
-|---|---|
-`,
+|---|---|`,
+		},
+		{
+			name:     "3x4 Table",
+			filename: "test13.md",
+			expected: `| Header 1 | Header 2 | Header 3 | Header 4 |
+|---|---|---|---|
+| Row 1, Column 1 | Row 1, Column 2 | Row 1, Column 3 | Row 1, Column 4 |
+| Row 2, Column 1 | Row 2, Column 2 | Row 2, Column 3 | Row 2, Column 4 |
+| Row 3, Column 1 | Row 3, Column 2 | Row 3, Column 3 | Row 3, Column 4 |`,
+		},
+		{
+			name:     "Multiple sections with links",
+			filename: "test14.md",
+			expected: `## Data Engineering
+
+* [Building and scaling Notion's data lake](https://www.notion.so/blog/building-and-scaling-notions-data-lake)
+
+## eidos - Personal Knowledge Management
+
+https://discord.com/invite/bsGMPDR23b
+
+https://eidos.space/?home=1
+
+[GitHub - mayneyao/eidos: Offline alternative to Notion. Eidos is an extensible framework for managing your personal data throughout your lifetime in one place.](https://github.com/mayneyao/eidos)`,
 		},
 	}
 

@@ -10,6 +10,8 @@ import (
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
+	"github.com/yuin/goldmark/extension"
+	east "github.com/yuin/goldmark/extension/ast"
 	"github.com/yuin/goldmark/text"
 )
 
@@ -69,6 +71,24 @@ func renderMarkdown(w io.Writer, n ast.Node, source []byte) {
 			fmt.Fprintf(w, "%s", line.Value(source))
 		}
 		fmt.Fprintln(w, "```")
+	case *east.Table:
+		for r := v.FirstChild(); r != nil; r = r.NextSibling() {
+			fmt.Fprint(w, "|")
+			for c := r.FirstChild(); c != nil; c = c.NextSibling() {
+				fmt.Fprint(w, " ")
+				renderMarkdown(w, c, source)
+				fmt.Fprint(w, " |")
+			}
+			fmt.Fprintln(w)
+			if r == v.FirstChild() {
+				fmt.Fprint(w, "|")
+				for c := r.FirstChild(); c != nil; c = c.NextSibling() {
+					fmt.Fprint(w, "---|")
+				}
+				fmt.Fprintln(w)
+			}
+		}
+
 	default:
 		if n.Type() == ast.TypeBlock {
 			for i := 0; i < n.Lines().Len(); i++ {
@@ -83,12 +103,15 @@ func renderMarkdown(w io.Writer, n ast.Node, source []byte) {
 }
 
 func parseMarkdown(fsys fs.FS, filename string) (string, error) {
-	markdown := goldmark.New()
+	md := goldmark.New(
+		goldmark.WithExtensions(extension.GFM),
+	)
+
 	input, err := fs.ReadFile(fsys, filename)
 	if err != nil {
 		return "", fmt.Errorf("error reading file: %w", err)
 	}
-	doc := markdown.Parser().Parse(text.NewReader(input))
+	doc := md.Parser().Parse(text.NewReader(input))
 	var buf bytes.Buffer
 	renderMarkdown(&buf, doc, input)
 	return strings.TrimSpace(buf.String()), nil
