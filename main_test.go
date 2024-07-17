@@ -10,15 +10,19 @@ func TestParseMarkdown(t *testing.T) {
 		"test01.md": &fstest.MapFile{Data: []byte(`[name](https://name.com)`)},
 		"test02.md": &fstest.MapFile{Data: []byte(`Hello, world!`)},
 		"test03.md": &fstest.MapFile{Data: []byte(`# Header 1
+
 This is a paragraph with a [link](https://example.com).
+
 * List item 1
 * List item 2
+
 ## Header 2
+
 1. Numbered item 1
 2. Numbered item 2
-> This is a blockquote.
- This is a code block.
-`)},
+
+> This is a blockquote.`)},
+		"test04.md": &fstest.MapFile{Data: []byte("```\nThis is a code block.\n```")},
 	}
 
 	tests := []struct {
@@ -51,9 +55,12 @@ This is a paragraph with a [link](https://example.com).
 1. Numbered item 1
 2. Numbered item 2
 
-> This is a blockquote.
-
- This is a code block.`,
+> This is a blockquote.`,
+		},
+		{
+			name:     "Code block only",
+			filename: "test04.md",
+			expected: "```\nThis is a code block.\n```",
 		},
 	}
 

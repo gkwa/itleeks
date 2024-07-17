@@ -62,11 +62,13 @@ func renderMarkdown(w io.Writer, n ast.Node, source []byte) {
 			renderMarkdown(w, c, source)
 		}
 		fmt.Fprintln(w)
-	case *ast.CodeBlock:
-		if v.Lines().Len() > 0 {
-			line := v.Lines().At(0)
-			fmt.Fprintf(w, "  %s", line.Value(source))
+	case *ast.FencedCodeBlock:
+		fmt.Fprintln(w, "```")
+		for i := 0; i < v.Lines().Len(); i++ {
+			line := v.Lines().At(i)
+			fmt.Fprintf(w, "%s", line.Value(source))
 		}
+		fmt.Fprintln(w, "```")
 	default:
 		if n.Type() == ast.TypeBlock {
 			for i := 0; i < n.Lines().Len(); i++ {
