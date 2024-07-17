@@ -53,7 +53,7 @@ https://discord.com/invite/bsGMPDR23b
 
 https://eidos.space/?home=1
 
-[GitHub - mayneyao/eidos: Offline alternative to Notion. Eidos is an extensible framework for managing your personal data throughout your lifetime in one place.](https://github.com/mayneyao/eidos)
+[GitHub - mayneyao/eidos: Offline alternative to Notion. Eidos is an extensible framework for managing your personal data throughout your lifetime in one place.](https://github.com/mayneyao/eidos "some long ass title")
 `)},
 	}
 
