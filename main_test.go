@@ -9,6 +9,22 @@ func TestParseMarkdown(t *testing.T) {
    fsys := fstest.MapFS{
    	"test01.md": &fstest.MapFile{Data: []byte(`[name](https://name.com)`)},
    	"test02.md": &fstest.MapFile{Data: []byte(`Hello, world!`)},
+   	"test03.md": &fstest.MapFile{Data: []byte(`# Header 1
+
+This is a paragraph with a [link](https://example.com).
+
+* List item 1
+* List item 2
+
+## Header 2
+
+1. Numbered item 1
+2. Numbered item 2
+
+> This is a blockquote.
+
+   This is a code block.
+`)},
    }
 
    tests := []struct {
@@ -19,12 +35,31 @@ func TestParseMarkdown(t *testing.T) {
    	{
    		name:     "Simple link",
    		filename: "test01.md",
-		expected: "[name](https://name.com)",
+   		expected: "[name](https://name.com)",
    	},
    	{
-		name:     "Simple text",
+   		name:     "Simple text",
    		filename: "test02.md",
-		expected: "Hello, world!",
+   		expected: "Hello, world!",
+   	},
+   	{
+   		name:     "Complex markdown",
+   		filename: "test03.md",
+   		expected: `# Header 1
+
+This is a paragraph with a [link](https://example.com).
+
+* List item 1
+* List item 2
+
+## Header 2
+
+1. Numbered item 1
+2. Numbered item 2
+
+> This is a blockquote.
+
+   This is a code block.`,
    	},
    }
 
