@@ -19,12 +19,12 @@ func TestParseMarkdown(t *testing.T) {
    	{
    		name:     "Simple link",
    		filename: "test01.md",
-   		expected: "\n[name](https://name.com)",
+		expected: "[name](https://name.com)",
    	},
    	{
-   		name:     "Complex markdown",
+		name:     "Simple text",
    		filename: "test02.md",
-   		expected: "\n\nHello, world!",
+		expected: "Hello, world!",
    	},
    }
 

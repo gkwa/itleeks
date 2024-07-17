@@ -6,6 +6,7 @@ import (
    "io"
    "io/fs"
    "os"
+   "strings"
 
    "github.com/yuin/goldmark"
    "github.com/yuin/goldmark/ast"
@@ -22,7 +23,6 @@ func renderMarkdown(w io.Writer, n ast.Node, source []byte) {
    		}
    	}
    case *ast.Paragraph:
-   	fmt.Fprintln(w)
    	for c := v.FirstChild(); c != nil; c = c.NextSibling() {
    		renderMarkdown(w, c, source)
    	}
@@ -30,7 +30,6 @@ func renderMarkdown(w io.Writer, n ast.Node, source []byte) {
    	linkText := v.Text(source)
    	fmt.Fprintf(w, "[%s](%s)", linkText, v.Destination)
    case *ast.Text:
-   	fmt.Fprintln(w)
    	fmt.Fprint(w, string(v.Text(source)))
    case *ast.String:
    	fmt.Fprint(w, string(v.Value))
@@ -55,7 +54,7 @@ func parseMarkdown(fsys fs.FS, filename string) (string, error) {
    doc := markdown.Parser().Parse(text.NewReader(input))
    var buf bytes.Buffer
    renderMarkdown(&buf, doc, input)
-   return buf.String(), nil
+   return strings.TrimSpace(buf.String()), nil
 }
 
 func main() {
