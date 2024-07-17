@@ -29,8 +29,8 @@ func renderMarkdown(w io.Writer, n ast.Node, source []byte) {
 		linkText := v.Text(source)
 		fmt.Fprintf(w, "[%s](%s)", linkText, v.Destination)
 	case *ast.Text:
-		fmt.Fprint(w, string(v.Text(source)))
 		fmt.Fprintln(w)
+		fmt.Fprint(w, string(v.Text(source)))
 	case *ast.String:
 		fmt.Fprint(w, string(v.Value))
 	case *ast.AutoLink:
