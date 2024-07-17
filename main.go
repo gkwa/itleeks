@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 
 	"github.com/yuin/goldmark"
@@ -45,15 +46,23 @@ func renderMarkdown(w io.Writer, n ast.Node, source []byte) {
 	}
 }
 
-func main() {
+func parseMarkdown(fsys fs.FS, filename string) (string, error) {
 	markdown := goldmark.New()
-	input, err := os.ReadFile("testdata/test.md")
+	input, err := fs.ReadFile(fsys, filename)
 	if err != nil {
-		fmt.Println("Error reading file:", err)
-		return
+		return "", fmt.Errorf("error reading file: %w", err)
 	}
 	doc := markdown.Parser().Parse(text.NewReader(input))
 	var buf bytes.Buffer
 	renderMarkdown(&buf, doc, input)
-	fmt.Println(buf.String())
+	return buf.String(), nil
+}
+
+func main() {
+	result, err := parseMarkdown(os.DirFS("."), "testdata/test.md")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println(result)
 }
